@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="mauitest.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <StackLayout Padding="30" Spacing="20">
+
+        <Label
+            SemanticProperties.HeadingLevel="Level1"
+            Style="{StaticResource Headline}"
+            Text="Conversor Dolar BCV a Bolivares" />
+
+        <Picker
+            x:Name="picker"
+            Title="Seleccione una moneda"
+            SelectedIndexChanged="ChangeOfCurrency">
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Dolar</x:String>
+                    <x:String>Euro</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+        </Picker>
+
+        <!--  Campo de Dólares  -->
+        <Grid
+            ColumnDefinitions="*, Auto"
+            ColumnSpacing="5"
+            RowDefinitions="Auto, Auto">
+
+            <!--  Entry  -->
+            <Entry
+                x:Name="dolares"
+                Grid.Row="1"
+                Grid.Column="0"
+                Keyboard="Numeric"
+                Placeholder="Escribe dólares"
+                TextChanged="dolares_TextChanged" />
+
+            <!--  Botón copiar  -->
+            <Button
+                Grid.Row="1"
+                Grid.Column="1"
+                Clicked="CopyDolares"
+                Text="📋" />
+        </Grid>
+
+        <!--  Campo de Bolívares  -->
+        <Grid
+            ColumnDefinitions="*, Auto"
+            ColumnSpacing="5"
+            RowDefinitions="Auto, Auto">
+            <Label
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Text="Bolívares" />
+
+            <Entry
+                x:Name="bolivares"
+                Grid.Row="1"
+                Grid.Column="0"
+                Keyboard="Numeric"
+                Placeholder="Escribe bolívares"
+                TextChanged="bolivares_TextChanged" />
+
+            <Button
+                Grid.Row="1"
+                Grid.Column="1"
+                Clicked="CopyBolivares"
+                Text="📋" />
+        </Grid>
+
+        <!--  Botón limpiar abajo  -->
+        <Button Clicked="CleanAll" Text="Limpiar" />
+
+    </StackLayout>
+
+</ContentPage>
