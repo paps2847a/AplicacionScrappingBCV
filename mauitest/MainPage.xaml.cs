@@ -6,9 +6,9 @@ namespace mauitest
     public partial class MainPage : ContentPage
     {
         private readonly IBCVScrapperService _bCVScrapperService;
-        private decimal dolarPrice = 0;
-        private decimal euroPrice = 0;
         private bool _isUpdating = false;
+        private string _usedCurrency = "USD";
+        private decimal selectedCurrencyPrice = 0;
 
         public MainPage(IBCVScrapperService bCVScrapperService)
         {
@@ -36,32 +36,28 @@ namespace mauitest
 
         protected override async void OnAppearing()
         {
-            var priceDolarData = await _bCVScrapperService.GetBCVDolar();
-
-            dolarPrice = priceDolarData.Item1;
-            euroPrice = priceDolarData.Item2;
+            selectedCurrencyPrice = await _bCVScrapperService.GetBCVDolar(_usedCurrency);
 
             dolares.Text = "1";
-            bolivares.Text = dolarPrice.ToString();
+            bolivares.Text = selectedCurrencyPrice.ToString();
             picker.SelectedIndex = 0;
         }
 
         private async void CleanAll(object sender, EventArgs e)
         {
-            var priceDolarData = await _bCVScrapperService.GetBCVDolar();
-
-            dolarPrice = priceDolarData.Item1;
-            euroPrice = priceDolarData.Item2;
+            selectedCurrencyPrice = await _bCVScrapperService.GetBCVDolar(_usedCurrency);
 
             dolares.Text = "1";
-            bolivares.Text = dolarPrice.ToString();
+            bolivares.Text = selectedCurrencyPrice.ToString();
         }
 
-        private void ChangeOfCurrency(object sender, EventArgs e)
+        private async void ChangeOfCurrency(object sender, EventArgs e)
         {
-            var selectedPrice = picker.SelectedIndex == 0 ? dolarPrice : euroPrice;
-            bolivares.Text = selectedPrice.ToString();
+            _usedCurrency = picker.SelectedIndex == 0 ? "USD" : "EURO";
+            selectedCurrencyPrice = (await _bCVScrapperService.GetBCVDolar(_usedCurrency));
+
             dolares.Text = "1";
+            bolivares.Text = selectedCurrencyPrice.ToString();
         }
 
         private void dolares_TextChanged(object sender, TextChangedEventArgs e)
@@ -84,7 +80,7 @@ namespace mauitest
                 return;
             }
 
-            var bolivaresDecimal = decimal.Round(dolaresDecimal * dolarPrice, 2);
+            var bolivaresDecimal = decimal.Round(dolaresDecimal * selectedCurrencyPrice, 2);
 
             bolivares.Text = bolivaresDecimal.ToString();
             _isUpdating = false;
@@ -110,7 +106,7 @@ namespace mauitest
                 return;
             }
 
-            var dolaresDecimal = decimal.Round(bolivaresDecimal / dolarPrice, 2);
+            var dolaresDecimal = decimal.Round(bolivaresDecimal / selectedCurrencyPrice, 2);
 
             dolares.Text = dolaresDecimal.ToString();
             _isUpdating = false;
